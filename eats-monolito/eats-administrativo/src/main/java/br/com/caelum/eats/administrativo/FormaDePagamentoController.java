@@ -16,7 +16,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-class FormaDePagamentoController {
+public class FormaDePagamentoController {
 
 	private FormaDePagamentoRepository formaRepo;
 

@@ -15,7 +15,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-class TipoDeCozinhaController {
+public class TipoDeCozinhaController {
 
 	private TipoDeCozinhaRepository repo;
 

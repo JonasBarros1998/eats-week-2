@@ -15,7 +15,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-class HorarioDeFuncionamentoController {
+public class HorarioDeFuncionamentoController {
 
 	private HorarioDeFuncionamentoRepository repo;
 	

@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import br.com.caelum.eats.administrativo.TipoDeCozinha;
 
-interface RestauranteRepository extends JpaRepository<Restaurante, Long> {
+public interface RestauranteRepository extends JpaRepository<Restaurante, Long> {
 
 	List<Restaurante> findAllByAprovado(boolean aprovado);
 

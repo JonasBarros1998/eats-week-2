@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/pagamentos")
 @AllArgsConstructor
-class PagamentoController {
+public class PagamentoController {
 
 	private PagamentoRepository pagamentoRepo;
 	private PedidoClienteComFeign pedidoCliente;

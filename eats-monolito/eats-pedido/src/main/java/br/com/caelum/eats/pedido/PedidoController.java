@@ -16,7 +16,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-class PedidoController {
+public class PedidoController {
 
 	private PedidoRepository repo;
 

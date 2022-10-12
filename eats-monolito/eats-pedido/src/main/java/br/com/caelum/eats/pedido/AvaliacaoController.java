@@ -16,7 +16,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-class AvaliacaoController {
+public class AvaliacaoController {
 
 	private AvaliacaoRepository repo;
 

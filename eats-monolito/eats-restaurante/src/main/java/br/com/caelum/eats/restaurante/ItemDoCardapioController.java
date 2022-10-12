@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-class ItemDoCardapioController {
+public class ItemDoCardapioController {
 
 	private ItemDoCardapioRepository repo;
 

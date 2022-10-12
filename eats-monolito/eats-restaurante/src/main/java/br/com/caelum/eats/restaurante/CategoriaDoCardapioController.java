@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 
 @RestController
 @AllArgsConstructor
-class CategoriaDoCardapioController {
+public class CategoriaDoCardapioController {
 
 	private CategoriaDoCardapioRepository repo;
 
