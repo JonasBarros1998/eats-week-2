@@ -5,7 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,10 +44,11 @@ public class PagamentoController {
 	}
 
 	@PutMapping("/{id}")
+	@HystrixCommand(fallbackMethod = "pagamentoSendoProcessado")
 	PagamentoDto confirma(@PathVariable("id") Long id) {
 		Pagamento pagamento = pagamentoRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
-		pagamento.setStatus(Pagamento.Status.CONFIRMADO);
 		pedidoCliente.notificaServicoDePedidoParaMudarStatus(pagamento.getPedidoId(), new MudancaDeStatusDoPedido("pago"));
+		pagamento.setStatus(Pagamento.Status.CONFIRMADO);
 		pagamentoRepo.save(pagamento);
 		return new PagamentoDto(pagamento);
 	}
@@ -55,6 +59,14 @@ public class PagamentoController {
 		pagamento.setStatus(Pagamento.Status.CANCELADO);
 		pagamentoRepo.save(pagamento);
 		return new PagamentoDto(pagamento);
+	}
+
+	PagamentoDto pagamentoSendoProcessado(@PathVariable("id") Long id) {
+		Pagamento pagamento = pagamentoRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
+		pagamento.setStatus(Pagamento.Status.PROCESSANDO);
+		pagamentoRepo.save(pagamento);
+		return new PagamentoDto(pagamento);
+
 	}
 
 }
