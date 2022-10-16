@@ -1,8 +1,8 @@
 package br.com.alura.eats.monolito.ports.controllers;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.alura.eats.monolito.application.DTO.HorarioDeFuncionamentoDto;
 import br.com.alura.eats.monolito.application.model.HorarioDeFuncionamento;
-import br.com.alura.eats.monolito.application.model.Restaurante;
-import br.com.alura.eats.monolito.ports.exceptions.ResourceNotFoundException;
+import br.com.alura.eats.monolito.application.useCase.HorarioDeFuncionamentoUseCase;
 import br.com.alura.eats.monolito.ports.repository.HorarioDeFuncionamentoRepository;
 import lombok.AllArgsConstructor;
 
@@ -22,35 +21,37 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class HorarioDeFuncionamentoController {
 
+	@Autowired
 	private HorarioDeFuncionamentoRepository repo;
-	
+
 	@GetMapping("/restaurantes/{idRestaurante}/horarios-de-funcionamento/{id}")
 	public HorarioDeFuncionamentoDto detalha(@PathVariable("id") Long id) {
-		HorarioDeFuncionamento horario = repo.findById(id).orElseThrow(() -> new ResourceNotFoundException());
-		return new HorarioDeFuncionamentoDto(horario);
+		HorarioDeFuncionamentoUseCase horarioDeFuncionamentoUseCase = new HorarioDeFuncionamentoUseCase(repo);
+		return horarioDeFuncionamentoUseCase.detalha(id);
 	}
 
 	@GetMapping("/restaurantes/{idRestaurante}/horarios-de-funcionamento")
 	public List<HorarioDeFuncionamentoDto> lista(@PathVariable("idRestaurante") Long idRestaurante) {
-		Restaurante restaurante = new Restaurante();
-		restaurante.setId(idRestaurante);
-		List<HorarioDeFuncionamento> horariosDoRestaurante = repo.findAllByRestaurante(restaurante);
-		return horariosDoRestaurante.stream().map(h -> new HorarioDeFuncionamentoDto(h)).collect(Collectors.toList());
+		HorarioDeFuncionamentoUseCase horarioDeFuncionamentoUseCase = new HorarioDeFuncionamentoUseCase(repo);
+		return horarioDeFuncionamentoUseCase.lista(idRestaurante);
 	}
 
 	@PostMapping("/parceiros/restaurantes/{idRestaurante}/horarios-de-funcionamento")
 	public HorarioDeFuncionamento adiciona(@RequestBody HorarioDeFuncionamento horarioDeFuncionamento) {
-		return repo.save(horarioDeFuncionamento);
+		HorarioDeFuncionamentoUseCase horarioDeFuncionamentoUseCase = new HorarioDeFuncionamentoUseCase(repo);
+		return horarioDeFuncionamentoUseCase.adiciona(horarioDeFuncionamento);
 	}
 
 	@PutMapping("/parceiros/restaurantes/{idRestaurante}/horarios-de-funcionamento/{id}")
 	public HorarioDeFuncionamento atualiza(@RequestBody HorarioDeFuncionamento horarioDeFuncionamento) {
-		return repo.save(horarioDeFuncionamento);
+		HorarioDeFuncionamentoUseCase horarioDeFuncionamentoUseCase = new HorarioDeFuncionamentoUseCase(repo);
+		return horarioDeFuncionamentoUseCase.atualiza(horarioDeFuncionamento);
 	}
 
 	@DeleteMapping("/parceiros/restaurantes/{idRestaurante}/horarios-de-funcionamento/{id}")
 	public void remove(@PathVariable("id") Long id) {
-		repo.deleteById(id);
+		HorarioDeFuncionamentoUseCase horarioDeFuncionamentoUseCase = new HorarioDeFuncionamentoUseCase(repo);
+		horarioDeFuncionamentoUseCase.remove(id);
 	}
 
 }

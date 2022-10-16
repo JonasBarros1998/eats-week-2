@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,66 +15,52 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.alura.eats.monolito.application.DTO.PedidoDto;
 import br.com.alura.eats.monolito.application.model.Pedido;
-import br.com.alura.eats.monolito.ports.exceptions.ResourceNotFoundException;
+import br.com.alura.eats.monolito.application.useCase.PedidoUseCase;
 import br.com.alura.eats.monolito.ports.repository.PedidoRepository;
-import lombok.AllArgsConstructor;
 
 @RestController
-@AllArgsConstructor
 public class PedidoController {
 
+	@Autowired
 	private PedidoRepository repo;
 
 	@GetMapping("/pedidos")
 	List<PedidoDto> lista() {
-		return repo.findAll()
-				.stream()
-				.map(PedidoDto::new)
-				.collect(Collectors.toList());
+		PedidoUseCase pedido = new PedidoUseCase(repo);
+		return pedido.lista();
 	}
 
 
 	@GetMapping("/pedidos/{id}")
-	PedidoDto porId(@PathVariable("id") Long id) {
-		Pedido pedido = repo.findById(id).orElseThrow(ResourceNotFoundException::new);
-		return new PedidoDto(pedido);
+	public PedidoDto porId(@PathVariable Long id) {
+		PedidoUseCase pedido = new PedidoUseCase(repo);
+		return pedido.porId(id);
 	}
 
 	@PostMapping("/pedidos")
 	PedidoDto adiciona(@RequestBody Pedido pedido) {
-		pedido.setDataHora(LocalDateTime.now());
-		pedido.setStatus(Pedido.Status.REALIZADO);
-		pedido.getItens().forEach(item -> item.setPedido(pedido));
-		pedido.getEntrega().setPedido(pedido);
-		Pedido salvo = repo.save(pedido);
-		return new PedidoDto(salvo);
+		PedidoUseCase pedidoUseCase = new PedidoUseCase(repo);
+		return pedidoUseCase.adiciona(pedido);
 	}
 
 	@PutMapping("/pedidos/{pedidoId}/status")
 	PedidoDto atualizaStatus(@PathVariable Long pedidoId, @RequestBody Pedido pedidoParaAtualizar) throws InterruptedException {
-		if (LocalDateTime.now().getMinute() % 2 == 0) {
-			Pedido pedido = repo.porIdComItens(pedidoId).orElseThrow(ResourceNotFoundException::new);
-			pedido.setStatus(pedidoParaAtualizar.getStatus());
-			repo.atualizaStatus(pedido.getStatus(), pedido);
-			return new PedidoDto(pedido);
-		}
-
-		Thread.sleep(30000);
-		throw new RuntimeException("Não foi possível atualizar o pedido");
+		PedidoUseCase pedido = new PedidoUseCase(repo);
+		return pedido.atualizaStatus(pedidoId, pedidoParaAtualizar);
 	}
 
 	@PutMapping("/pedidos/{id}/pago")
 	void pago(@PathVariable("id") Long id) {
-		Pedido pedido = repo.porIdComItens(id).orElseThrow(ResourceNotFoundException::new);
-		pedido.setStatus(Pedido.Status.PAGO);
-		repo.atualizaStatus(Pedido.Status.PAGO, pedido);
+		PedidoUseCase pedido = new PedidoUseCase(repo);
+		pedido.pago(id);
+		
 	}
 
 
 	@GetMapping("/parceiros/restaurantes/{restauranteId}/pedidos/pendentes")
 	List<PedidoDto> pendentes(@PathVariable("restauranteId") Long restauranteId) {
-		return repo.doRestauranteSemOsStatus(restauranteId, Arrays.asList(Pedido.Status.REALIZADO, Pedido.Status.ENTREGUE)).stream()
-				.map(pedido -> new PedidoDto(pedido)).collect(Collectors.toList());
+		PedidoUseCase pedido = new PedidoUseCase(repo);
+		return pedido.pendentes(restauranteId);
 	}
 
 }
