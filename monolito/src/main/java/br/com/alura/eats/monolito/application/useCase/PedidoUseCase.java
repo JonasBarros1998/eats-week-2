@@ -41,6 +41,7 @@ public class PedidoUseCase {
 	}
 
 	public PedidoDto atualizaStatus(Long pedidoId, Pedido pedidoParaAtualizar) throws InterruptedException {
+		System.out.println(">>> " + LocalDateTime.now().getMinute());
 		if (LocalDateTime.now().getMinute() % 2 == 0) {
 			Pedido pedido = repo.porIdComItens(pedidoId).orElseThrow(ResourceNotFoundException::new);
 			pedido.setStatus(pedidoParaAtualizar.getStatus());
@@ -48,7 +49,7 @@ public class PedidoUseCase {
 			return new PedidoDto(pedido);
 		}
 
-		Thread.sleep(30000);
+		Thread.sleep(300);
 		throw new RuntimeException("Não foi possível atualizar o pedido");
 	}
 

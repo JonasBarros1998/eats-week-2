@@ -1,0 +1,8 @@
+server: 
+  port: 8081
+
+resilience4j.circuitbreaker:
+  instances:
+    confirmaPagamento:
+      registerHealthIndicator: true
+      slidingWindowSize: 100
