@@ -82,9 +82,8 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
-  </dependencies>
 
-  <!--spring security-->
+		<!--spring security
 
   <dependency>
 			<groupId>org.springframework.security</groupId>
@@ -119,8 +118,9 @@
 			<scope>test</scope>
 		</dependency>
 
-  <!--spring security-->
+  spring security-->
 
+  </dependencies>
 
 	<dependencyManagement>
 		<dependencies>

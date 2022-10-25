@@ -6,3 +6,5 @@ resilience4j.circuitbreaker:
     confirmaPagamento:
       registerHealthIndicator: true
       slidingWindowSize: 100
+
+      

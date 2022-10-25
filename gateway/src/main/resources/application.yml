@@ -1,0 +1,29 @@
+server:
+  port: 5555
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+      
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    inetutils:
+      timeout-seconds: 10
+    gateway:
+      routes:
+      - id: pagamentos
+        uri: http://localhost:8081/
+        predicates:
+        - Path=/pagamentos/**
+        
+      - id: distancia
+        uri: http://localhost:8080/
+        predicates:
+        - Path=/restaurantes/**  

@@ -67,3 +67,6 @@ Para acessar a console do h2, basta seguir os passos:
     3. password (senha)
 
 Agora é só estudar e tirar suas dúvidas com o mentor!!!
+
+
+http://127.0.0.1:8000/oauth2/authorize?response_type=code&client_id=client1&redirect_uri=http://127.0.0.1:8080/authorized&scope=openid read
